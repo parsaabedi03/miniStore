@@ -1,0 +1,26 @@
+import { postData } from "./utils/httpReq.js";
+import { setCookie } from "./utils/cookie.js";
+import authHanler from "./utils/authorization.js";
+import validateForm from "./utils/validation.js";
+
+const inputsBox = document.querySelectorAll("input");
+const loginButton = document.querySelector("button");
+
+const submitHandler = async (event) => {
+  event.preventDefault();
+
+  const username = inputsBox[0].value;
+  const password = inputsBox[1].value;
+
+  const validate = validateForm(username, password);
+
+  if (!validate) return;
+
+  const response = await postData("auth/login", { username, password });
+  setCookie(response.token);
+
+  location.assign("index.html");
+};
+
+loginButton.addEventListener("click", submitHandler);
+document.addEventListener("DOMContentLoaded", authHanler);
